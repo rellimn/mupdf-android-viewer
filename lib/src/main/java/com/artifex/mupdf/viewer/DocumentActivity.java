@@ -21,6 +21,7 @@ import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -79,6 +80,7 @@ public class DocumentActivity extends Activity
 	private ImageButton  mOutlineButton;
 	private ViewAnimator mTopBarSwitcher;
 	private ImageButton  mLinkButton;
+	private ImageButton  mShareButton;
 	private TopBarMode   mTopBarMode = TopBarMode.Main;
 	private ImageButton  mSearchBack;
 	private ImageButton  mSearchFwd;
@@ -509,6 +511,16 @@ public class DocumentActivity extends Activity
 			}
 		});
 
+		mShareButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {Intent shareIntent = new Intent();
+				shareIntent.setAction(Intent.ACTION_SEND);
+				shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(mDocKey));
+				shareIntent.setType("application/pdf");
+				shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+				startActivity(Intent.createChooser(shareIntent, null));
+			}
+		});
+
 		if (core.isReflowable()) {
 			mLayoutButton.setVisibility(View.VISIBLE);
 			mLayoutPopupMenu = new PopupMenu(this, mLayoutButton);
@@ -771,6 +783,7 @@ public class DocumentActivity extends Activity
 		mSearchClose = (ImageButton)mButtonsView.findViewById(R.id.searchClose);
 		mSearchText = (EditText)mButtonsView.findViewById(R.id.searchText);
 		mLinkButton = (ImageButton)mButtonsView.findViewById(R.id.linkButton);
+		mShareButton = (ImageButton)mButtonsView.findViewById(R.id.shareButton);
 		mLayoutButton = mButtonsView.findViewById(R.id.layoutButton);
 		mTopBarSwitcher.setVisibility(View.INVISIBLE);
 		mPageNumberView.setVisibility(View.INVISIBLE);
